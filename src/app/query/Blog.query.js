@@ -2,13 +2,12 @@ import { Field } from 'Util/Query';
 
 export class BlogQuery {
     constructFilters(filter) {
-        const a = filter.reduce((acc, { key, value, condition }) => {
+        return filter.reduce((acc, { key, value, condition }) => {
             return {
                 ...acc,
                 [key]: { [condition]: value }
             };
         }, {});
-        console.log(a);
     }
 
     getBlogPosts({ pageSize, currentPage, filter }) {
@@ -22,15 +21,15 @@ export class BlogQuery {
         return query;
     }
 
-    getPostItems() {
-        return new Field('items')
-            .addField('content');
+    getSingleBlogPost(id) {
+        return new Field('blogPost')
+            .addArgument('id', 'String!', id)
+            .addFieldList(['content', 'featured_image', 'title']);
     }
 
-    getSingleBlogPost(id) {
-        return new field('blogPost')
-            .addArgument('id', 'ID!', id)
-            .addField('content');
+    getPostItems() {
+        return new Field('items')
+            .addFieldList(['short_content', 'featured_image', 'title', 'post_url']);
     }
 }
 

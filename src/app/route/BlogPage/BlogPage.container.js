@@ -10,12 +10,15 @@ import { BlogPostsDispatcher } from 'Store/BlogPosts';
 
 import BlogPage from './BlogPage.component';
 
+export const CATEGORY_BLOG_TYPE = 'category';
+
 export const mapStateToProps = state => ({
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState
 });
 
 export const mapDispatchToProps = dispatch => ({
     getBlogPosts: options => BlogPostsDispatcher.getBlogPosts(dispatch, options),
+    getSingleBlogPost: options => BlogPostsDispatcher.getSingleBlogPost(dispatch, options),
     changeHeaderState: state => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
     updateBreadcrumbs: breadcrumbs => BreadcrumbsDispatcher.update(breadcrumbs, dispatch),
     updateMeta: meta => dispatch(updateMeta(meta))
@@ -28,24 +31,43 @@ export class BlogPageContainer extends PureComponent {
         updateMeta: PropTypes.func.isRequired
     };
 
-    state = { posts: [], categoryId: null };
+    constructor(props) {
+        super(props);
+
+        const { match: { params: { blogType, id } } } = props;
+
+        this.state = {
+            posts: [],
+            id,
+            blogType
+        };
+    }
 
     async componentDidMount() {
-        const { updateMeta, getBlogPosts, match: { params: { categoryId } } } = this.props;
+        const {
+            updateMeta, updateBreadcrumbs, getBlogPosts, getSingleBlogPost
+        } = this.props;
+        const { id, blogType } = this.state;
 
         updateMeta({ title: __('Blog') });
 
-        const { items } = await getBlogPosts({ filter: [{ key: 'category_id', value: categoryId, condition: 'eq' }] });
+        // add breadcrumbs
 
-        this.setState({ posts: items, categoryId });
+        if (blogType === CATEGORY_BLOG_TYPE) {
+            const { items: posts } = await getBlogPosts({ filter: [{ key: 'category_id', value: id, condition: 'eq' }] });
+
+            return this.setState({ posts });
+        }
+
+        const post = await getSingleBlogPost(id);
+
+        return this.setState({ posts: [post] });
     }
 
     render() {
-        const { posts } = this.state;
-
         return (
             <BlogPage
-             posts={ posts }
+              { ...this.state }
             />
         );
     }

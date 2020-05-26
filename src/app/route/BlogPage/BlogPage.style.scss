@@ -1,0 +1,26 @@
+.BlogPage {
+    &-ListWrapper {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    &-Post {
+        padding: 10px;
+    }
+
+    &-Header {
+        font-size: 1.5rem;
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+    }
+
+    &-SinglePost {
+        margin: 20px;
+
+        .BlogPage-Header {
+            margin: 0 10px;
+            text-align: left;
+        }
+    }
+}

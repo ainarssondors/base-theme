@@ -17,10 +17,14 @@ export class BlogPostsDispatcher {
     getBlogPosts(dispatch, options) {
         return fetchQuery(BlogQuery.getBlogPosts(options)).then(
             ({ blogPosts }) => blogPosts,
-            ([{ message }]) => {
-                dispatch(showNotification('error', message));
-                return Promise.reject();
-            }
+            ([{ message }]) => dispatch(showNotification('error', message))
+        );
+    }
+
+    getSingleBlogPost(dispatch, options) {
+        return fetchQuery(BlogQuery.getSingleBlogPost(options)).then(
+            ({ blogPost }) => blogPost,
+            ([{ message }]) => dispatch(showNotification('error', message))
         );
     }
 }
