@@ -28,25 +28,24 @@ export class BlogPageContainer extends PureComponent {
         updateMeta: PropTypes.func.isRequired
     };
 
-    state = { isEditing: false };
+    state = { posts: [], categoryId: null };
 
     async componentDidMount() {
-        const { updateMeta, getBlogPosts } = this.props;
+        const { updateMeta, getBlogPosts, match: { params: { categoryId } } } = this.props;
 
         updateMeta({ title: __('Blog') });
 
-        console.log(location.pathname);
+        const { items } = await getBlogPosts({ filter: [{ key: 'category_id', value: categoryId, condition: 'eq' }] });
 
-        const a = await getBlogPosts({});
-
-        console.log(a);
+        this.setState({ posts: items, categoryId });
     }
 
     render() {
+        const { posts } = this.state;
+
         return (
             <BlogPage
-              { ...this.props }
-              { ...this.state }
+             posts={ posts }
             />
         );
     }

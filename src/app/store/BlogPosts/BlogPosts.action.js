@@ -6,7 +6,11 @@ export const GET_POSTS = 'GET_POSTS';
  * @param  {Number} totalItems Total number of products in this filter
  * @return {void}
  */
-export const getBlogPosts = postData => ({
+const getBlogPosts = postData => ({
     type: GET_POSTS,
     postData
 });
+
+export {
+    getBlogPosts
+};

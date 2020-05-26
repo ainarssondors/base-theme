@@ -30,6 +30,7 @@ import { SearchBarReducer } from 'Store/SearchBar';
 import { UrlRewritesReducer } from 'Store/UrlRewrites';
 import { MyAccountReducer } from 'Store/MyAccount';
 import { ConfigReducer } from 'Store/Config';
+import { BlogPostsReducer } from 'Store/BlogPosts';
 
 export const reducers = {
     CmsBlocksAndSliderReducer,
@@ -48,7 +49,8 @@ export const reducers = {
     SearchBarReducer,
     MyAccountReducer,
     UrlRewritesReducer,
-    ConfigReducer
+    ConfigReducer,
+    BlogPostsReducer
 };
 
 const combinedReducers = combineReducers(reducers);

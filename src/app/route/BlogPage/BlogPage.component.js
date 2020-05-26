@@ -12,6 +12,7 @@
 import { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
+import Html from 'Component/Html';
 import ContentWrapper from 'Component/ContentWrapper';
 
 export default class CartPage extends PureComponent {
@@ -19,6 +20,8 @@ export default class CartPage extends PureComponent {
     };
 
     render() {
+        const { posts } = this.props;
+
         return (
             <main block="BlogPage" aria-label="Blog Page">
                 <ContentWrapper
@@ -26,7 +29,7 @@ export default class CartPage extends PureComponent {
                   label="Blog page details"
                 >
                     <div block="BlogPage" elem="Static">
-                        content
+                        { posts.map(({ content }) => <Html content={ content } />)}
                     </div>
                 </ContentWrapper>
             </main>
