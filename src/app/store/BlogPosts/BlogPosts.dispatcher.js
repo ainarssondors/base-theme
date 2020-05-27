@@ -27,6 +27,13 @@ export class BlogPostsDispatcher {
             ([{ message }]) => dispatch(showNotification('error', message))
         );
     }
+
+    getBlogCategory(dispatch, options) {
+        return fetchQuery(BlogQuery.getBlogCategory(options)).then(
+            ({ blogCategory }) => blogCategory,
+            ([{ message }]) => dispatch(showNotification('error', message))
+        );
+    }
 }
 
 export default new BlogPostsDispatcher();

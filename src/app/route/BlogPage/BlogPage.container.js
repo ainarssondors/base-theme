@@ -17,6 +17,7 @@ export const mapStateToProps = state => ({
 });
 
 export const mapDispatchToProps = dispatch => ({
+    getBlogCategory: options => BlogPostsDispatcher.getBlogCategory(dispatch, options),
     getBlogPosts: options => BlogPostsDispatcher.getBlogPosts(dispatch, options),
     getSingleBlogPost: options => BlogPostsDispatcher.getSingleBlogPost(dispatch, options),
     changeHeaderState: state => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
@@ -39,27 +40,42 @@ export class BlogPageContainer extends PureComponent {
         this.state = {
             posts: [],
             id,
-            blogType
+            blogType,
+            categoryData: {}
         };
     }
 
     async componentDidMount() {
         const {
-            updateMeta, updateBreadcrumbs, getBlogPosts, getSingleBlogPost
+            updateMeta, updateBreadcrumbs, getBlogPosts, getSingleBlogPost, getBlogCategory
         } = this.props;
         const { id, blogType } = this.state;
 
-        updateMeta({ title: __('Blog') });
+        console.log(this.props);
 
-        // add breadcrumbs
+        updateMeta({ title: __('Blog') });
 
         if (blogType === CATEGORY_BLOG_TYPE) {
             const { items: posts } = await getBlogPosts({ filter: [{ key: 'category_id', value: id, condition: 'eq' }] });
 
-            return this.setState({ posts });
+            const categoryData = await getBlogCategory(id);
+            const { title, category_url } = categoryData;
+
+            updateBreadcrumbs([{ name: title, url: category_url }]);
+
+            return this.setState({ posts, categoryData });
         }
 
         const post = await getSingleBlogPost(id);
+        const { categories, title, post_url } = post;
+
+        const { category_url, title: categoryTitle } = categories[0] || {};
+        const postBreadcrumbs = [{ name: title, url: post_url }];
+
+        if (category_url && categoryTitle) postBreadcrumbs.push({ name: categoryTitle, url: category_url });
+
+        // todo rework breadcrumbs for single post
+        updateBreadcrumbs(postBreadcrumbs);
 
         return this.setState({ posts: [post] });
     }
@@ -67,7 +83,7 @@ export class BlogPageContainer extends PureComponent {
     render() {
         return (
             <BlogPage
-              { ...this.state }
+                { ...this.state }
             />
         );
     }

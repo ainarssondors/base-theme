@@ -16,7 +16,6 @@ export default class BlogPage extends PureComponent {
     };
 
     renderSinglePost(posts) {
-        console.log('##########');
         const { featured_image, content, title } = posts[0];
 
         return (
@@ -24,6 +23,21 @@ export default class BlogPage extends PureComponent {
                 <h3 block="BlogPage" elem="Header">{ title }</h3>
                 <Image src={ featured_image } mix={ { block: 'BlogPage', elem: 'Image' } } />
                 <Html content={ content } />
+            </div>
+        )
+    }
+
+    renderCategoryContent() {
+        const { categoryData } = this.props;
+
+        if (!Object.keys(categoryData).length) return null;
+
+        const { title, content } = categoryData;
+
+        return (
+            <div>
+                <h1>{ title }</h1>
+                { content && <p><Html content={ content } /></p> }
             </div>
         )
     }
@@ -56,8 +70,11 @@ export default class BlogPage extends PureComponent {
                 >
                     { blogType === CATEGORY_BLOG_TYPE
                         ? (
-                            <div block="BlogPage" elem="ListWrapper">
-                                { this.renderPosts(posts) }
+                            <div block="BlogPage" elem="CategoryWrapper">
+                                { this.renderCategoryContent() }
+                                <div block="BlogPage" elem="ListWrapper">
+                                    { this.renderPosts(posts) }
+                                </div>
                             </div>)
                         : this.renderSinglePost(posts)
                     }

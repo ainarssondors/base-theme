@@ -10,6 +10,12 @@ export class BlogQuery {
         }, {});
     }
 
+    getBlogCategory(id) {
+        return new Field('blogCategory')
+            .addArgument('id', 'String', id)
+            .addFieldList(['title', 'content', 'category_url']);
+    }
+
     getBlogPosts({ pageSize, currentPage, filter }) {
         const query = new Field('blogPosts')
             .addField(this.getPostItems());
@@ -24,7 +30,8 @@ export class BlogQuery {
     getSingleBlogPost(id) {
         return new Field('blogPost')
             .addArgument('id', 'String!', id)
-            .addFieldList(['content', 'featured_image', 'title']);
+            .addFieldList(['content', 'featured_image', 'title', 'post_url'])
+            .addField(new Field('categories').addFieldList(['title', 'category_url']));
     }
 
     getPostItems() {
